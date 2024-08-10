@@ -5,9 +5,10 @@ const fs = require('fs-extra');
 const path = require('path');
 const cors = require('cors');
 const archiver = require('archiver');
+const { handleGetFeaturesList, handleGetSelectedFeaturesCode } = require('./AI');
 const app = express();
 const port = 3002;
-
+require("dotenv").config();
 
 app.use(cors({ origin: 'http://localhost:3000' }));
 app.use(express.json());
@@ -175,6 +176,22 @@ app.get('/download', (req, res) => {
   archive.directory(projectDir, 'server'); // Add the projectDir to the zip under the 'server' directory
   archive.finalize();
 });
+
+app.post('/get-features-list', async (req, res) => {
+  const {data, status, error} = await handleGetFeaturesList(req);
+
+  if(!error) return res.status(200).json({data, status, error});
+  
+  return res.status(400).json({data, status, error});
+})
+
+app.post('/get-selected-feature-code', async (req, res) => {
+  const {data, status, error} = await handleGetSelectedFeaturesCode(req);
+
+  if(!error) return res.status(200).json({data, status, error});
+  
+  return res.status(400).json({data, status, error});
+})
 
 
 app.listen(port, () => {
