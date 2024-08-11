@@ -11,9 +11,11 @@
   "dependencies": {
     "archiver": "^7.0.1",
     "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
     "express": "^4.19.2",
     "fs-extra": "^11.2.0",
-    "openai": "^4.55.4",
-    "dotenv": "^16.0.3"
+    "mongodb": "^6.8.0",
+    "mongoose": "^8.5.2",
+    "openai": "^4.55.4"
   }
 }

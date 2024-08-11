@@ -5,14 +5,16 @@ const fs = require('fs-extra');
 const path = require('path');
 const cors = require('cors');
 const archiver = require('archiver');
+const connectDB = require('./db');
 const { handleGetFeaturesList, handleGetSelectedFeaturesCode } = require('./AI');
+const featureRoutes = require('./routes/feature');
 const app = express();
-const port = 3002;
+const PORT = process.env.PORT || 3002;
 require("dotenv").config();
 
 app.use(cors({ origin: 'http://localhost:3000' }));
+// Middleware to parse JSON
 app.use(express.json());
-
 
 const features = [
   {
@@ -39,6 +41,10 @@ const features = [
   { id: 5, name: "Feature 5", code: "// Code for feature 5", schema: "// Schema for feature 5" }
 ];
 
+connectDB();
+
+// Use the feature routes
+app.use('/api/features', featureRoutes);
 
 app.get('/features', (req, res) => {
   res.json(features);
@@ -144,7 +150,6 @@ node index.js
   }
 });
 
-
 app.get('/download', (req, res) => {
   const projectDir = path.join(__dirname, 'server');
   const zipPath = path.join(__dirname, 'project.zip');
@@ -194,8 +199,8 @@ app.post('/get-selected-feature-code', async (req, res) => {
 })
 
 
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
+app.listen(PORT, () => {
+  console.log(`Server running at http://localhost:${PORT}`);
 });
 
 
