@@ -123,7 +123,7 @@ app.get("/features", (req, res) => {
 });
 
 app.post("/generate", (req, res) => {
-  const { selectedFeatures } = req.body;
+  const { selectedFeatures, allFeatures } = req.body;
 
   console.log("Received selected features:", selectedFeatures); // Log received data
 
@@ -222,11 +222,13 @@ node index.js
     fs.writeFileSync(readmePath, readmeContent);
 
     selectedFeatures.forEach((feature) => {
-      const featureData = features.find((f) => f.id === feature.id);
+      const featureData = allFeatures.find((f) => f.id === feature.id);
 
       if (!featureData) {
         throw new Error(`Feature with ID ${feature.id} not found`);
       }
+
+      if(featureData['code']['schema']) return;
 
       if (typeof featureData.code === "string") {
         const routePath = path.join(
